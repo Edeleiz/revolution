@@ -13,7 +13,7 @@ namespace Code.Game
 		private MapController _mapController;
 	
 		// Use this for initialization
-		void Awake()
+		private void Start()
 		{
 			var mapSource = Resources.Load("Data/mapProperties");
 			
@@ -29,10 +29,6 @@ namespace Code.Game
 		// Update is called once per frame
 		void Update() 
 		{
-			if (Input.GetMouseButtonUp(0))
-			{
-				_mapController.MakeAction();
-			}
 		}
 	}
 }

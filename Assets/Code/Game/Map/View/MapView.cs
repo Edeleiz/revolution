@@ -3,6 +3,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Zenject;
 
 namespace Code.Game.Map.View
 {
@@ -33,6 +34,8 @@ namespace Code.Game.Map.View
 			private set { _renderer = value; }
 		}
 
+		[Inject] private MapViewEvents _mapViewEvents;
+
 		private List<Color> _regionColors;
 	
 		// Use this for initialization
@@ -47,7 +50,10 @@ namespace Code.Game.Map.View
 		// Update is called once per frame
 		void Update() 
 		{
-		
+			if (Input.GetMouseButtonUp(0))
+			{
+				OnClick();
+			}
 		}
 
 		private void Initialize()
@@ -67,6 +73,35 @@ namespace Code.Game.Map.View
 					_regionColors.Add(pixel);
 				}
 			}
+		}
+
+		public void OnClick()
+		{
+			var cam = Camera.main;
+			System.Diagnostics.Debug.Assert(cam != null, "cam != null");
+        
+			RaycastHit hitInfo;
+			var ray = cam.ScreenPointToRay(Input.mousePosition);
+			if (!Physics.Raycast(ray, out hitInfo))
+				return;
+        
+			var sprite = _renderer.sprite;
+        
+			if (sprite.packed && sprite.packingMode == SpritePackingMode.Tight)
+			{
+				// Cannot use textureRect on tightly packed sprites
+				Debug.LogError("SpritePackingMode.Tight atlas packing is not supported!");
+				// TODO: support tightly packed sprites
+				return;
+			}
+        
+			// Convert world position to sprite position
+			// worldToLocalMatrix.MultiplyPoint3x4 returns a value from based on the texWure dimensions (+/- half texDimension / pixelsPerUnit) )
+			// 0, 0 corresponds to the center of the TEXTURE ITSELF, not the center of the trimmed sprite textureRect
+			var spritePos = _renderer.worldToLocalMatrix.MultiplyPoint3x4(ray.origin + (ray.direction * hitInfo.distance));
+			var color = GetRegionColor(spritePos);
+            
+			_mapViewEvents.OnRegionClicked?.Invoke(color);
 		}
 
 		public Color GetRegionColor(Vector3 texPosition)

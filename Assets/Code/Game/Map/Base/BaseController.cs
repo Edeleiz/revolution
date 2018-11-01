@@ -1,8 +1,37 @@
 ﻿using Code.Game.Map.Controller;
+using Zenject;
 
 namespace Code.Game.Map.Base
 {
-    public class BaseController<T> where T : BaseData
+    public class BaseController : IInitializable
+    {
+        public virtual void Initialize()
+        {
+            
+        }
+
+        protected virtual void AddDataListeners()
+        {
+            
+        }
+
+        protected virtual void RemoveDataListeners()
+        {
+            
+        }
+
+        protected virtual void CommitData()
+        {
+        
+        }
+
+        protected virtual void Clear()
+        {
+        
+        }
+    }
+    
+    public class BaseController<T> : BaseController where T : BaseData
     {
         private T _data;
         public T Data
@@ -24,33 +53,6 @@ namespace Code.Game.Map.Base
                 AddDataListeners();
                 CommitData();
             }
-        }
-
-        protected MapController _mapController;
-
-        public BaseController(MapController map)
-        {
-            _mapController = map;
-        }
-
-        protected virtual void AddDataListeners()
-        {
-            
-        }
-
-        protected virtual void RemoveDataListeners()
-        {
-            
-        }
-
-        protected virtual void CommitData()
-        {
-        
-        }
-
-        protected virtual void Clear()
-        {
-        
         }
     }
 }
