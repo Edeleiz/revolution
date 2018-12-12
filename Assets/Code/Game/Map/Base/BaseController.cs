@@ -3,7 +3,7 @@ using Zenject;
 
 namespace Code.Game.Map.Base
 {
-    public class BaseController : IInitializable
+    public class BaseController
     {
         public virtual void Initialize()
         {

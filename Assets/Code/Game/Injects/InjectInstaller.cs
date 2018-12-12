@@ -8,8 +8,8 @@ public class InjectInstaller : MonoInstaller
 {
     public override void InstallBindings()
     {
-        Container.Bind<IInitializable>().To<RegionController>().AsTransient();
-        Container.Bind<MapViewEvents>().AsSingle();
-        ViewInjectsInstaller.Install(Container);
+//        Container.Bind<IInitializable>().WhenInjectedInto<RegionController>();
+//        Container.Bind<MapViewEvents>().AsSingle();
+//        ViewInjectsInstaller.Install(Container);
     }
 }

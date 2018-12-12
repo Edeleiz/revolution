@@ -9,5 +9,10 @@ namespace Code.Game.Map.Source
     {
         public string name;
         public string color;
+
+        public float posX;
+        public float posY;
+
+        public RegionObjectSource[] objects;
     }
 }

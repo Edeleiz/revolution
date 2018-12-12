@@ -21,8 +21,8 @@ namespace Code.Game
 			mapData.Source = mapSource;
 			
 			_mapController = new MapController();
-			_mapController.Data = mapData;
 			_mapController.MapView = _mapView;
+			_mapController.Data = mapData;
 			_mapController.Initialize();
 		}
 	

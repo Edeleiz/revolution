@@ -1,10 +1,10 @@
 ﻿{
   "regions" :
   [
-    { "name" : "region1", "color" : "#ED1C24" },
-    { "name" : "region2", "color" : "#22B14C" },
-    { "name" : "region3", "color" : "#FFF200" },
-    { "name" : "region4", "color" : "#FF7F27" },
-    { "name" : "region5", "color" : "#00A2E8" }
+    { "name" : "region1", "color" : "#ED1C24", "posX" : "-7.313", "posY" : "6.893", "objects" : [{"name" : "Capital", "posX" : "0.0", "posY" : "0.0"}] },
+    { "name" : "region2", "color" : "#22B14C", "posX" : "0", "posY" : "0", "objects" : [{"name" : "Capital", "posX" : "-1.0", "posY" : "-4.0"}] },
+    { "name" : "region3", "color" : "#FFF200", "posX" : "6.745", "posY" : "4.02", "objects" : [{"name" : "Capital", "posX" : "0.0", "posY" : "0.0"}] },
+    { "name" : "region4", "color" : "#FF7F27", "posX" : "-0.758", "posY" : "-1.04", "objects" : [{"name" : "Capital", "posX" : "0.0", "posY" : "0.0"}] },
+    { "name" : "region5", "color" : "#00A2E8", "posX" : "-5.27", "posY" : "-6.627", "objects" : [{"name" : "Capital", "posX" : "0.0", "posY" : "0.0"}] }
   ]
 }

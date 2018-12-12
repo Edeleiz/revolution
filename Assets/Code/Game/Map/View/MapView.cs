@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Code.Game.Map.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -34,9 +35,14 @@ namespace Code.Game.Map.View
 			private set { _renderer = value; }
 		}
 
-		[Inject] private MapViewEvents _mapViewEvents;
+		private MapViewEvents _mapViewEvents = MapViewEvents.Instance;
 
 		private List<Color> _regionColors;
+
+		[SerializeField]
+		private RegionView _regionViewPrefab;
+		
+		private List<RegionView> _regionViews;
 	
 		// Use this for initialization
 		void Awake() 
@@ -52,8 +58,23 @@ namespace Code.Game.Map.View
 		{
 			if (Input.GetMouseButtonUp(0))
 			{
-				OnClick();
+				var color = GetCurrentRegion();
+				_mapViewEvents.OnRegionClicked?.Invoke(color);
 			}
+			else
+			{
+				var color = GetCurrentRegion();
+				_mapViewEvents.OnRegionHovered?.Invoke(color);
+			}
+		}
+
+		public RegionView AddRegionView(RegionData data)
+		{
+			var regionView = GameObject.Instantiate(_regionViewPrefab, this.transform);
+			regionView.transform.localPosition = data.MapPosition;
+			_regionViews.Add(regionView);
+
+			return regionView;
 		}
 
 		private void Initialize()
@@ -62,6 +83,7 @@ namespace Code.Game.Map.View
 
 			_renderer.sprite = Sprite.Create(_mapTexture, new Rect(0.0f, 0.0f, _mapTexture.width, _mapTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
 			_regionColors = new List<Color>();
+			_regionViews = new List<RegionView>();
 		}
 
 		private void SetColors()
@@ -75,15 +97,15 @@ namespace Code.Game.Map.View
 			}
 		}
 
-		public void OnClick()
+		private Color GetCurrentRegion()
 		{
 			var cam = Camera.main;
 			System.Diagnostics.Debug.Assert(cam != null, "cam != null");
         
 			RaycastHit hitInfo;
 			var ray = cam.ScreenPointToRay(Input.mousePosition);
-			if (!Physics.Raycast(ray, out hitInfo))
-				return;
+			if (!Physics.Raycast(ray, out hitInfo) || hitInfo.collider == null)
+				return Color.black;
         
 			var sprite = _renderer.sprite;
         
@@ -92,7 +114,7 @@ namespace Code.Game.Map.View
 				// Cannot use textureRect on tightly packed sprites
 				Debug.LogError("SpritePackingMode.Tight atlas packing is not supported!");
 				// TODO: support tightly packed sprites
-				return;
+				return Color.black;
 			}
         
 			// Convert world position to sprite position
@@ -100,8 +122,11 @@ namespace Code.Game.Map.View
 			// 0, 0 corresponds to the center of the TEXTURE ITSELF, not the center of the trimmed sprite textureRect
 			var spritePos = _renderer.worldToLocalMatrix.MultiplyPoint3x4(ray.origin + (ray.direction * hitInfo.distance));
 			var color = GetRegionColor(spritePos);
-            
-			_mapViewEvents.OnRegionClicked?.Invoke(color);
+
+			if (color == new Color(0, 0, 0, 0))
+				return Color.black;
+			
+			return color;
 		}
 
 		public Color GetRegionColor(Vector3 texPosition)
